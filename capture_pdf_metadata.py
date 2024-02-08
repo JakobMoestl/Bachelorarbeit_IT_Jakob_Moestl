@@ -19,6 +19,8 @@ def select_folder():
 def process_folder():
     pdf_dir = folder_entry.get()
     if os.path.isdir(pdf_dir):
+        # Übergeordneter Ordnername
+        parent_folder = os.path.basename(os.path.normpath(pdf_dir))
         # Liste für die Metadaten
         metadata_list = []
         # Durchlauf aller PDF-Dateien im Verzeichnis
@@ -42,8 +44,7 @@ def process_folder():
         df = pd.DataFrame(metadata_list)
 
         # Speicherort der CSV-Datei auf deinem Desktop
-        desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
-        csv_file = os.path.join(desktop_path, 'metadatenfhtechnikum.csv')
+        csv_file = os.path.join(pdf_dir, f'{parent_folder}_metadata.csv')
 
         # DataFrame in eine CSV-Datei exportieren
         df.to_csv(csv_file, index=False)
