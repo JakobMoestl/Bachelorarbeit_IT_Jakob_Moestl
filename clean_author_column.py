@@ -2,7 +2,6 @@ import pandas as pd
 import re
 import tkinter as tk
 from tkinter import filedialog
-import os
 
 # Funktion zur Überprüfung, ob ein vollständiger Name vorhanden ist
 def has_full_name(name):
@@ -23,8 +22,6 @@ def format_name(name):
         parts = re.split(r'\s|,', name.strip())
         if len(parts) == 2:
             return parts[1] + ", " + parts[0]
-        elif len(parts) > 2:
-            return parts[-1] + ", " + " ".join(parts[:-1])
         else:
             return name
     else:
@@ -48,19 +45,15 @@ def process_file():
         # Filtern der Datensätze mit bereinigten Autoren
         cleaned_df = df.dropna(subset=["bereinigter_Author"])
 
-        # Speicherort für die bereinigte CSV-Datei
-        output_dir = os.path.dirname(input_csv_file)
-        output_file = os.path.join(output_dir, "cleaned_author_" + os.path.basename(input_csv_file))
-
-        # Speichern der bereinigten Daten in eine neue CSV-Datei
-        cleaned_df.to_csv(output_file, index=False)
-        print("Die bereinigte CSV-Datei wurde erfolgreich gespeichert in '{}'.".format(output_file))
+        # Überschreiben der ursprünglichen CSV-Datei
+        cleaned_df.to_csv(input_csv_file, index=False)
+        print("Die CSV-Datei wurde bereinigt und überschrieben.")
     else:
         print("Es wurde keine CSV-Datei ausgewählt.")
 
 # GUI erstellen
 root = tk.Tk()
-root.title("CSV-Datei bereinigen und speichern")
+root.title("CSV-Datei bereinigen")
 
 # Label und Eingabefeld für die Dateiauswahl
 file_label = tk.Label(root, text="CSV-Datei auswählen:")
@@ -72,7 +65,7 @@ select_button = tk.Button(root, text="Datei auswählen", command=select_file)
 select_button.grid(row=0, column=2, padx=10, pady=10)
 
 # Button zum Verarbeiten der Datei
-process_button = tk.Button(root, text="Datei verarbeiten und speichern", command=process_file)
+process_button = tk.Button(root, text="Datei verarbeiten", command=process_file)
 process_button.grid(row=1, column=0, columnspan=3, padx=10, pady=10)
 
 root.mainloop()
